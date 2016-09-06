@@ -1,6 +1,13 @@
-" plugins
-call plug#begin('~/.vim/plugged')
+if has ("win32")
+	set shell=cmd
+	set shellcmdflag=/c
+	call plug#begin('$VIMRUNTIME/plugged')
+else
+	set shell=sh
+	call plug#begin('~/.vim/plugged')
+endif
 
+"plugins
 Plug 'Raimondi/delimitMate'
 Plug 'pangloss/vim-javascript'
 Plug 'nathanaelkane/vim-indent-guides'
@@ -25,7 +32,6 @@ set relativenumber
 set guicursor+=a:blinkon0
 set shiftwidth=4
 set tabstop=4
-set shell=sh
 set updatetime=250
 set autoread
 set ignorecase
@@ -93,9 +99,9 @@ if has("gui_running")
                         set guioptions-=L
                         set guioptions-=r
                         set guioptions-=T
-                        set fu
 				endif
 endif
+"status line
 " from https://github.com/spf13/spf13-vim/blob/master/.vimrc
 if has('statusline')
       set laststatus=2
