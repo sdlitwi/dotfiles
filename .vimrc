@@ -2,6 +2,7 @@ if has ("win32")
 	set shell=cmd
 	set shellcmdflag=/c
 	set nocompatible
+	set lines=999 columns=999
 	behave mswin
 	set diffexpr=MyDiff()
 	call plug#begin('$USERPROFILE/vimfiles/plugged')
