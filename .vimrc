@@ -1,29 +1,32 @@
 if has ("win32")
-	set shell=cmd
-	set shellcmdflag=/c
-	set nocompatible
-	set lines=999 columns=999
-	au GUIEnter * simalt ~x
-	behave mswin
-	set diffexpr=MyDiff()
-	call plug#begin('$USERPROFILE/vimfiles/plugged')
+    set shell=cmd
+    set shellcmdflag=/c
+    set nocompatible
+    set lines=999 columns=999
+    au GUIEnter * simalt ~x
+    behave mswin
+    set diffexpr=MyDiff()
+    call plug#begin('$USERPROFILE/vimfiles/plugged')
 else
-	set shell=sh
-	call plug#begin('~/.vim/plugged')
+    set shell=sh
+    call plug#begin('~/.vim/plugged')
 endif
 
 "plugins
 Plug 'Raimondi/delimitMate'
 Plug 'pangloss/vim-javascript'
 Plug 'nathanaelkane/vim-indent-guides'
-"npm install -g jshint
-Plug 'scrooloose/syntastic'
+Plug 'scrooloose/syntastic' "npm install -g jshint
 Plug 'jelera/vim-javascript-syntax'
 Plug 'scrooloose/nerdtree'
 Plug 'airblade/vim-gitgutter'
 Plug 'Xuyuanp/nerdtree-git-plugin'
 Plug 'tpope/vim-fugitive'
 Plug 'ervandew/supertab'
+Plug 'OrangeT/vim-csharp'
+Plug 'othree/javascript-libraries-syntax.vim'
+Plug 'Yggdroot/indentLine'
+Plug 'dkprice/vim-easygrep'
 
 call plug#end()
 
@@ -68,80 +71,90 @@ set foldlevel=1
 
 "plugin specific settings
 let NERDTreeShowHidden=1
-autocmd VimEnter * NERDTree
-autocmd VimEnter * wincmd p
+"autocmd VimEnter * NERDTree "open NERDTree on start
+"autocmd VimEnter * wincmd p "focus current file on start
+"autocmd BufWinEnter * NERDTreeMirror "show NERDTree on all tabs
 let NERDTreeIgnore=['\.DS_Store', '\~$', '\.swp']
 let g:NERDTreeWinPos = "right"
 let g:superTabDefaultCompletionType = "context"
+let g:ctrlp_working_path_mode = 'ra'
 
 autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
 " Close all open buffers on entering a window if the only
 " buffer that's left is the NERDTree buffer
 function! s:CloseIfOnlyNerdTreeLeft()
-  if exists("t:NERDTreeBufName")
-    if bufwinnr(t:NERDTreeBufName) != -1
-      if winnr("$") == 1
-        q
-      endif
+    if exists("t:NERDTreeBufName")
+        if bufwinnr(t:NERDTreeBufName) != -1
+            if winnr("$") == 1
+                q
+            endif
+        endif
     endif
-  endif
 endfunction
+
+"reload config when saving
+if has ('autocmd') " Remain compatible with earlier versions
+    augroup vimrc     " Source vim configuration upon save
+        autocmd! BufWritePost $MYVIMRC source % | echom "Reloaded " . $MYVIMRC | redraw
+        autocmd! BufWritePost $MYGVIMRC if has('gui_running') | so % | echom "Reloaded " . $MYGVIMRC | endif | redraw
+    augroup END
+endif " has autocmd"
 
 "set GUI specific options                     
 if has("gui_running")
-	  if has("gui_gtk2")
-		      set guifont=Inconsolata\ 12
-		        elseif has("gui_macvim")
-				        set guifont=Consolas:h14
-						set background=dark
-                        set guioptions-=L
-                        set guioptions-=r
-                        set guioptions-=T
-                        set fu
-			    elseif has("gui_win32")
-					    set guifont=Consolas:h14:cANSI
-                        set guioptions-=L
-                        set guioptions-=r
-                        set guioptions-=T
-				endif
+    if has("gui_gtk2")
+        set guifont=Inconsolata\ 12
+    elseif has("gui_macvim")
+        set guifont=Consolas:h14
+        set background=dark
+        set guioptions-=L
+        set guioptions-=r
+        set guioptions-=T
+        set fu
+    elseif has("gui_win32")
+        set guifont=Consolas:h14:cANSI
+        set guioptions-=L
+        set guioptions-=r
+        set guioptions-=T
+    endif
 endif
 "status line
 " from https://github.com/spf13/spf13-vim/blob/master/.vimrc
 if has('statusline')
-      set laststatus=2
-      " Broken down into easily includeable segments
-      set statusline=%<%f\    " Filename
-      set statusline+=%w%h%m%r " Options
-      set statusline+=%{fugitive#statusline()} "  Git Hotness
-      set statusline+=%#warningmsg#
-      set statusline+=%{SyntasticStatuslineFlag()}
-      set statusline+=%*
-      let g:syntastic_enable_signs=1
-      set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
-    endif
+    set laststatus=2
+    " Broken down into easily includeable segments
+    set statusline=%<%f\    " Filename
+    set statusline+=%w%h%m%r " Options
+    set statusline+=%{fugitive#statusline()} "  Git Hotness
+    set statusline+=%#warningmsg#
+    set statusline+=%{SyntasticStatuslineFlag()}
+    set statusline+=%*
+    let g:syntastic_enable_signs=1
+    set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+endif
 
 "windows diff
-function MyDiff()
-  let opt = '-a --binary '
-  if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
-  if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
-  let arg1 = v:fname_in
-  if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
-  let arg2 = v:fname_new
-  if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
-  let arg3 = v:fname_out
-  if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
-  let eq = ''
-  if $VIMRUNTIME =~ ' '
-    if &sh =~ '\<cmd'
-      let cmd = '""' . $VIMRUNTIME . '\diff"'
-      let eq = '"'
+function! MyDiff()
+    let opt = '-a --binary '
+    if &diffopt =~ 'icase' | let opt = opt . '-i ' | endif
+    if &diffopt =~ 'iwhite' | let opt = opt . '-b ' | endif
+    let arg1 = v:fname_in
+    if arg1 =~ ' ' | let arg1 = '"' . arg1 . '"' | endif
+    let arg2 = v:fname_new
+    if arg2 =~ ' ' | let arg2 = '"' . arg2 . '"' | endif
+    let arg3 = v:fname_out
+    if arg3 =~ ' ' | let arg3 = '"' . arg3 . '"' | endif
+    let eq = ''
+    if $VIMRUNTIME =~ ' '
+        if &sh =~ '\<cmd'
+            let cmd = '""' . $VIMRUNTIME . '\diff"'
+            let eq = '"'
+        else
+            let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+        endif
     else
-      let cmd = substitute($VIMRUNTIME, ' ', '" ', '') . '\diff"'
+        let cmd = $VIMRUNTIME . '\diff'
     endif
-  else
-    let cmd = $VIMRUNTIME . '\diff'
-  endif
-  silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
+    silent execute '!' . cmd . ' ' . opt . arg1 . ' ' . arg2 . ' > ' . arg3 . eq
 endfunction
