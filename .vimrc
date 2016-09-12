@@ -67,6 +67,7 @@ set history=1000
 set undofile
 set undolevels=1000
 set undoreload=10000
+set noundofile
 set foldmethod=syntax   
 set foldnestmax=1
 set nofoldenable
