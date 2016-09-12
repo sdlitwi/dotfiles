@@ -29,7 +29,7 @@ Plug 'dkprice/vim-easygrep'
 
 "git plugins
 Plug 'airblade/vim-gitgutter
-Plug 'Xuyuanp/nerdtree-git-plugin
+Plug 'Xuyuanp/nerdtree-git-plugin, { 'on':   ['NERDTreeToggle', 'NERDTreeFind', 'NERDTree']  }"
 Plug 'tpope/vim-fugitive
 
 call plug#end()
@@ -75,7 +75,8 @@ set foldlevel=1
 set noerrorbells
 set novisualbell
 
-autocmd BufRead,BufWritePre *.sh normal gg=G "indent on save
+"indent on save
+autocmd BufRead,BufWritePre *.sh normal gg=G 
 
 "plugin specific settings
 let NERDTreeShowHidden=1
