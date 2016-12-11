@@ -61,7 +61,6 @@ set foldlevel=1
 set noerrorbells
 set novisualbell
 set list listchars=tab:»·,trail:·
-<<<<<<< HEAD
 set wildmenu
 set wildmode=longest:list,full
 
