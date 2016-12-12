@@ -1,25 +1,56 @@
+"WINDOWS - RENAME TO _vimrc and Place in %userprofile%
+"requires git to be installed (also curl for macOS/Linux)
 if has ("win32")
-    set shell=cmd
-    set shellcmdflag=/c
     set nocompatible
     set lines=999 columns=999
     set clipboard=exclude:.*
     source $VIMRUNTIME/mswin.vim "additional windows tweaks
     behave mswin
     set diffexpr=MyDiff()
-    call plug#begin('$VIMRUNTIME/plugged')
+    "install vim-plug if missing
+    if !isdirectory($HOME.'/vimfiles/autoload')
+        call mkdir($HOME.'/vimfiles/autoload', "p")
+    endif
+    if empty(glob('$HOME/vimfiles/autoload/plug.vim'))
+        silent !git clone https://github.com/junegunn/vim-plug.git \%userprofile\%/vimfiles/autoload
+        silent !move /vimfiles/autoload/vim-plug/plug.vim \%userprofile\%/vimfiles/autoload/plug.vim 
+        silent !rd \%userprofile\%/vimfiles/autoload/vim-plug/
+        autocmd VimEnter * PlugInstall | source $MYVIMRC
+    endif
+    "create plugin directory if missing
+    if !isdirectory($HOME.'/.vim/plugged')
+        call mkdir($HOME.'/.vim/plugged', "p")
+    endif
+    call plug#begin('$HOME/.vim/plugged')
 else
     set shell=sh
+    "install vim-plug if missing
+    if empty(glob('~/.vim/autoload/plug.vim'))
+        silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+        autocmd VimEnter * PlugInstall | source $MYVIMRC
+    endif
+    "create plugin directory if missing
+    if !isdirectory('~/.vim/plugged')
+        call mkdir('~/.vim/plugged', "p")
+    endif
     call plug#begin('~/.vim/plugged')
 endif
 
 "plugins
-"curl -fLo ~/.vim/autoload/plug.vim --create-dirs \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
 Plug 'altercation/vim-colors-solarized'     "solarized color scheme
 Plug 'jelera/vim-javascript-syntax'         "improved javascript syntax highlighting
 Plug 'OrangeT/vim-csharp'                   "improved C# and .Net MVC syntax highlighting
 Plug 'Yggdroot/indentLine'                  "vertial indent lines for spaces
 call plug#end()
+
+"function key mapping
+"F1 - help/documentation
+"F2 - save session
+"F3 - load session
+"F4 - toogle solarized background color (light/dark)
+map <F2> :mksession! ~/.vim_session <cr>
+map <F3> :source ~/.vim_session <cr>
+call togglebg#map("<F4>")
 
 "settings
 syntax on
@@ -63,6 +94,7 @@ set novisualbell
 set list listchars=tab:»·,trail:·
 set wildmenu
 set wildmode=longest:list,full
+set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
 
 "set GUI specific options
 if has("gui_running")
@@ -87,16 +119,16 @@ if has("gui_running")
     endif
 endif
 
-call togglebg#map("<F5>") "toogle solarized background color (light/dark)
-
 "status line
 if has('statusline')
     set laststatus=2
-    set statusline=%<%f\    " Filename
-    set statusline+=%w%h%m%r " Options
-    set statusline+=%#warningmsg#
-    set statusline+=%*
-    set statusline+=%=%-14.(%l,%c%V%)\ %p%%  " Right aligned file nav info
+    set statusline=%-.50F     " Full path to file, 50 characters max
+    set statusline+=\ (%n) " buffer number
+    set statusline+=\ %([%M%R%H%W]\ %) " Modified, Read-only, Help, and Preview flags
+    set statusline+=\ %y " Filetype
+    set statusline+=\ %=%< " Right-align and start truncation
+    set statusline+=\ [%04l/%04L\ %03c] " Show current line number, total lines, current column
+    set statusline+=\ %p%% " Percentage through file in lines
 endif
 
 "windows diff
