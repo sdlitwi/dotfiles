@@ -1,4 +1,4 @@
-"WINDOWS - RENAME TO _vimrc and Place in %userprofile%
+"WINDOWS - rename TO _vimrc and place in %userprofile%
 "requires git to be installed (also curl for macOS/Linux)
 if has ("win32")
     set nocompatible
