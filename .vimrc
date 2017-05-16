@@ -47,6 +47,7 @@ Plug 'othree/javascript-libraries-syntax.vim' 	"syntax highlighting
 Plug 'Raimondi/delimitMate' 					"auto close brackets,etc.
 Plug 'vim-syntastic/syntastic' 					"syntax checking
 Plug 'mtscout6/syntastic-local-eslint.vim' 		"use local eslint
+Plug 'editorconfig/editorconfig-vim'            ".editorconfig support
 call plug#end()
 
 "function key mapping
@@ -139,7 +140,7 @@ let g:syntastic_javascript_checkers=['eslint']
 let g:syntastic_always_populate_loc_list = 1
 let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
-let g:syntastic_check_on_wq = 1
+let g:syntastic_check_on_wq = 0
 let g:used_javascript_libs = 'jquery,angularjs,react'
 let g:superTabDefaultCompletionType = "context"
 let NERDTreeShowHidden=1
@@ -187,9 +188,10 @@ if has("gui_running")
     endif
 endif
 
-"close NerdTree and save session to user home
+"close items and save session to user home
 function! SaveSession()
     NERDTreeClose
+    SyntasticReset
     mksession! ~/.vim_session
 endfunction 
 
