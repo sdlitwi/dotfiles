@@ -108,10 +108,6 @@ set wildmenu
 set wildmode=longest:list,full
 set sessionoptions=blank,buffers,curdir,folds,tabpages,winsize
 let g:fullScreened = 0
-:set guioptions-=m  "remove menu bar
-:set guioptions-=T  "remove toolbar
-:set guioptions-=r  "remove right-hand scroll bar
-:set guioptions-=L  "remove left-hand scroll bar
 
 "indent on save
 autocmd BufRead,BufWritePre *.sh normal gg=G 
@@ -170,6 +166,7 @@ if has("gui_running")
     set guioptions-=L
     set guioptions-=r
     set guioptions-=T
+    set guioptions-=m
     if has("gui_gtk2")
         set guifont=Inconsolata\ 12
         clipboard=unnamedplus
