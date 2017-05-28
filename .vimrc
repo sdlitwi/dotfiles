@@ -39,6 +39,7 @@ endif
 "plugins
 Plug 'altercation/vim-colors-solarized'     	"solarized color scheme
 Plug 'jelera/vim-javascript-syntax'         	"improved javascript syntax highlighting
+Plug 'leafgarland/typescript-vim'               "typescript syntax highlighting 
 Plug 'OrangeT/vim-csharp'                   	"improved C# and .Net MVC syntax highlighting
 Plug 'Yggdroot/indentLine'                  	"vertial indent lines for spaces
 Plug 'scrooloose/nerdtree' 						"file tree
@@ -48,6 +49,8 @@ Plug 'Raimondi/delimitMate' 					"auto close brackets,etc.
 Plug 'vim-syntastic/syntastic' 					"syntax checking
 Plug 'mtscout6/syntastic-local-eslint.vim' 		"use local eslint
 Plug 'editorconfig/editorconfig-vim'            ".editorconfig support
+Plug 'airblade/vim-gitgutter'                   "show git changes
+Plug 'tpope/vim-fugitive'                       "git support
 call plug#end()
 
 "function key mapping
@@ -202,6 +205,7 @@ if has('statusline')
     set statusline+=\ (%n) " buffer number
     set statusline+=\ %([%M%R%H%W]\ %) " Modified, Read-only, Help, and Preview flags
     set statusline+=\ %y " Filetype
+    set statusline+=%{fugitive#statusline()} "  Git Hotness
     set statusline+=%#warningmsg#
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
