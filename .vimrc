@@ -21,7 +21,7 @@ if has ("win32")
     if !isdirectory($HOME.'/.vim/plugged')
         call mkdir($HOME.'/.vim/plugged', "p"
     endif
-    call plug#begin('$HOME/.vim/plugged')
+    silent! call plug#begin('$HOME/.vim/plugged')
 else
     set shell=sh
     "install vim-plug if missing
@@ -33,24 +33,19 @@ else
     if !isdirectory('~/.vim/plugged')
         call mkdir('~/.vim/plugged', "p")
     endif
-    call plug#begin('~/.vim/plugged')
+    silent! call plug#begin('~/.vim/plugged')
 endif
 
 "plugins
-Plug 'altercation/vim-colors-solarized'     	"solarized color scheme
-Plug 'jelera/vim-javascript-syntax'         	"improved javascript syntax highlighting
-Plug 'leafgarland/typescript-vim'               "typescript syntax highlighting 
-Plug 'OrangeT/vim-csharp'                   	"improved C# and .Net MVC syntax highlighting
-Plug 'Yggdroot/indentLine'                  	"vertial indent lines for spaces
-Plug 'scrooloose/nerdtree' 						"file tree
-Plug 'ervandew/supertab'						"tab auto complete
-Plug 'othree/javascript-libraries-syntax.vim' 	"syntax highlighting 
-Plug 'Raimondi/delimitMate' 					"auto close brackets,etc.
-Plug 'vim-syntastic/syntastic' 					"syntax checking
-Plug 'mtscout6/syntastic-local-eslint.vim' 		"use local eslint
-Plug 'editorconfig/editorconfig-vim'            ".editorconfig support
-Plug 'airblade/vim-gitgutter'                   "show git changes
-Plug 'tpope/vim-fugitive'                       "git support
+Plug 'altercation/vim-colors-solarized'         "solarized color scheme
+Plug 'jelera/vim-javascript-syntax'             "improved javascript syntax highlighting
+Plug 'OrangeT/vim-csharp'                       "improved C# and .Net MVC syntax highlighting
+Plug 'Yggdroot/indentLine'                      "vertial indent lines for spaces
+Plug 'scrooloose/nerdtree'                      "file tree
+Plug 'othree/javascript-libraries-syntax.vim'   "syntax highlighting 
+Plug 'Raimondi/delimitMate'                     "auto close brackets,etc.
+Plug 'vim-syntastic/syntastic'                  "syntax checking
+Plug 'mtscout6/syntastic-local-eslint.vim'      "use local eslint
 call plug#end()
 
 "function key mapping
@@ -145,7 +140,6 @@ let g:syntastic_auto_loc_list = 1
 let g:syntastic_check_on_open = 0
 let g:syntastic_check_on_wq = 0
 let g:used_javascript_libs = 'jquery,angularjs,react'
-let g:superTabDefaultCompletionType = "context"
 let NERDTreeShowHidden=1
 let NERDTreeIgnore=['\.DS_Store', '\~$', '\.swp']
 let g:NERDTreeWinPos = "right"
@@ -176,7 +170,7 @@ if has("gui_running")
         clipboard=unnamedplus
     elseif has("gui_macvim")
         set guifont=Consolas:h12
-        set background=dark
+        set background=light
         colorscheme solarized
         set fu
         clipboard=unnamedplus
@@ -205,7 +199,6 @@ if has('statusline')
     set statusline+=\ (%n) " buffer number
     set statusline+=\ %([%M%R%H%W]\ %) " Modified, Read-only, Help, and Preview flags
     set statusline+=\ %y " Filetype
-    set statusline+=%{fugitive#statusline()} "  Git Hotness
     set statusline+=%#warningmsg#
     set statusline+=%{SyntasticStatuslineFlag()}
     set statusline+=%*
