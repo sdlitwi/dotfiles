@@ -46,7 +46,7 @@ Plug 'othree/javascript-libraries-syntax.vim' "syntax highlighting
 Plug 'Raimondi/delimitMate' "auto close brackets,etc. 
 "Plug 'vim-syntastic/syntastic' "syntax checking 
 Plug 'mtscout6/syntastic-local-eslint.vim' "use local eslint 
-Plug 'dansomething/vim-eclim' 
+"Plug 'dansomething/vim-eclim'  "eclipse client for Java syntax checking 
 Plug 'NLKNguyen/papercolor-theme' 
 Plug 'pangloss/vim-javascript' 
 Plug 'mxw/vim-jsx' 
@@ -146,7 +146,8 @@ let NERDTreeIgnore=['\.DS_Store', '\~$', '\.swp']
 let g:NERDTreeWinPos = "right"
 
 
-"plugin specific functions/comands autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
+"plugin specific functions/comands 
+autocmd WinEnter * call s:CloseIfOnlyNerdTreeLeft()
 
 " Close all open buffers on entering a window if the only buffer that's left is the NERDTree buffer
  function! s:CloseIfOnlyNerdTreeLeft()
@@ -189,7 +190,7 @@ endif
 "close items and save session to user home 
 function! SaveSession()
     NERDTreeClose
-    SyntasticReset
+"    SyntasticReset
     mksession! ~/.vim_session
  endfunction
 
